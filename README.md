@@ -1,16 +1,18 @@
-# loginapp
+# loginapp2
 
 ```Custom Login/Sign up app```
+
+Note: `This loginapp is for my fkart app`
 
 # How To Run
 
 ## Clone the repo to local machine 
 ```bash
-git pull https://github.com/suraj-singh12/loginapp.git
+git pull https://github.com/suraj-singh12/loginapp2.git
 ```
 ## Install Dependencies
 ```bash
-cd loginapp
+cd loginapp2
 ```
 ```npm
 npm install

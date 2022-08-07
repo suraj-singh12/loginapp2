@@ -1,0 +1,7 @@
+the .env file is never pushed to github
+so if you are running code locally, ensure you make a .env file for all
+the values that use process.env.variable_name and populate it with same variables
+and their respective values.
+
+instead of uploading the env to github, we set the env variables in `config vars` in settings of app on heroku
+ensuring no key / private info / password leak happens.

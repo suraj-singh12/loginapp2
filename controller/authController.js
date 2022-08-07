@@ -7,16 +7,16 @@ const config = require('../config');
 const User = require('../model/userModel');
 
 
-router.use(bodyParser.urlencoded({extended:true}))
+router.use(bodyParser.urlencoded({ extended: true }))
 router.use(bodyParser.json());
 
 // use postman for api testing / making calls
 ///get all users
 // http://localhost:5000/api/auth/users (because the route defined is /api/auth in app.js)
 // https://loginappfkart.herokuapp.com/api/auth/users
-router.get('/users',(req,res) => {
-    User.find({},(err,data) => {
-        if(err) throw err;
+router.get('/users', (req, res) => {
+    User.find({}, (err, data) => {
+        if (err) throw err;
         res.send(data)
     })
 })
@@ -42,20 +42,20 @@ router.get('/users',(req,res) => {
 // }
 // http://localhost:5000/api/auth/register
 // https://loginappfkart.herokuapp.com/api/auth/register
-router.post('/register',(req,res) => {
-    User.findOne({email:req.body.email}, (err,user) => {
-        if(!user)  {        // if user does not exists, only then register
+router.post('/register', (req, res) => {
+    User.findOne({ email: req.body.email }, (err, user) => {
+        if (!user) {        // if user does not exists, only then register
             //encrypt Password
-            let hashPassword = bcrypt.hashSync(req.body.password,8)
+            let hashPassword = bcrypt.hashSync(req.body.password, 8)
             User.create({
-                name:req.body.name,
-                email:req.body.email,
-                password:hashPassword,
-                phone:req.body.phone,
-                address:req.body.address?req.body.address:'NA',
-                role:req.body.role?req.body.role:'User'
-            },(err,data) => {
-                if(err) return res.status(500).send('Error While Register');
+                name: req.body.name,
+                email: req.body.email,
+                password: hashPassword,
+                phone: req.body.phone,
+                address: req.body.address ? req.body.address : 'NA',
+                role: req.body.role ? req.body.role : 'User'
+            }, (err, data) => {
+                if (err) return res.status(500).send('Error While Register');
                 res.status(200).send('Registration Successful')
             })
         } else {
@@ -74,16 +74,16 @@ router.post('/register',(req,res) => {
  */
 // http://localhost:5000/api/auth/login
 // https://loginappfkart.herokuapp.com/api/auth/login
-router.post('/login',(req,res) => {
-    User.findOne({email:req.body.email},(err,user) => {
-        if(err) return res.send({auth:false,token:'Error While Login'})
-        if(!user) return res.send({auth:false,token:'No User Found Register First'})
-        else{
-            const passIsValid = bcrypt.compareSync(req.body.password,user.password)
-            if(!passIsValid) return res.send({auth:false,token:'Invalid Password'})
+router.post('/login', (req, res) => {
+    User.findOne({ email: req.body.email }, (err, user) => {
+        if (err) return res.send({ auth: false, token: 'Error While Login' })
+        if (!user) return res.send({ auth: false, token: 'No User Found Register First' })
+        else {
+            const passIsValid = bcrypt.compareSync(req.body.password, user.password)
+            if (!passIsValid) return res.send({ auth: false, token: 'Invalid Password' })
             // in case email and password both good than generate token
-            let token = jwt.sign({id:user._id},config.secret,{expiresIn:86400}) // 24 hours
-            return res.send({auth:true,token:token})
+            let token = jwt.sign({ id: user._id }, config.secret, { expiresIn: 86400 }) // 24 hours
+            return res.send({ auth: true, token: token })
         }
     })
 })
@@ -94,28 +94,34 @@ router.post('/login',(req,res) => {
 //userinfo
 // http://localhost:5000/api/auth/userInfo
 // https://loginappfkart.herokuapp.com/api/auth/userInfo (use postman to pass x-access-token as browser cannot pass it)
-router.get('/userInfo',(req,res) => {
+router.get('/userInfo', (req, res) => {
     let token = req.headers['x-access-token'];
-    if(!token) res.send({auth:false,token:'No Token Provided'})
+    if (!token) res.send({ auth: false, token: 'No Token Provided' })
     // jwt verify token
-    jwt.verify(token,config.secret,(err,user) => {
-        if(err) return res.send({auth:false,token:'Invalid Token'})
-        User.findById(user.id,(err,result) => {
+    jwt.verify(token, config.secret, (err, user) => {
+        if (err) return res.send({ auth: false, token: 'Invalid Token' })
+        User.findById(user.id, (err, result) => {
             res.send(result)
         })
     })
 })
 
 // delete all registered users (only for Developer)
+// https://loginappfkart.herokuapp.com/api/auth/deleteAll?key=
 router.delete('/deleteAll', (req, res) => {
-    User.deleteMany({}, (err, res) => {
-        if(err) throw err;
-        if(Number(result.deletedCount) === 0) {
-            res.status(500).send('No records exist!')
-        } else {
-            res.status(200).send(`Erased all ${result.deletedCount} records`)
-        }
-    })
+    let key = req.query.key;
+    if (key !== process.env.Key)
+        res.status(500).send('Invalid Key');
+    else {
+        User.deleteMany({}, (err, result) => {
+            if (err) throw err;
+            if (Number(result.deletedCount) === 0) {
+                res.status(500).send('No records exist!')
+            } else {
+                res.status(200).send(`Erased all ${result.deletedCount} records`)
+            }
+        })
+    }
 })
 
 module.exports = router

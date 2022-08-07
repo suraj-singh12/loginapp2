@@ -107,7 +107,7 @@ router.get('/userInfo',(req,res) => {
 })
 
 // delete all registered users (only for Developer)
-router.post('/deleteAll', (req, res) => {
+router.delete('/deleteAll', (req, res) => {
     User.deleteMany({}, (err, res) => {
         if(err) throw err;
         if(Number(result.deletedCount) === 0) {

@@ -106,5 +106,17 @@ router.get('/userInfo',(req,res) => {
     })
 })
 
+// delete all registered users (only for Developer)
+router.post('/deleteAll', (req, res) => {
+    User.deleteMany({}, (err, res) => {
+        if(err) throw err;
+        if(Number(result.deletedCount) === 0) {
+            res.status(500).send('No records exist!')
+        } else {
+            res.status(200).send(`Erased all ${result.deletedCount} records`)
+        }
+    })
+})
+
 module.exports = router
 

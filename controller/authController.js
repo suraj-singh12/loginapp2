@@ -21,6 +21,18 @@ router.get('/users', (req, res) => {
     })
 })
 
+router.put('/updateAddress/:email/:address', (req, res) => {
+    User.find({ email: req.params.email }, (err, data) => {
+        if (err) throw err;
+        data[0].address = req.params.address;
+        data[0].save();
+        res.send(data)
+    }).then(() => {
+        res.send('updated')
+    }).catch(err => {
+        res.send(err)
+    })
+})
 //register User 
 // use the format given in ../model/userModel to insert data 
 // {

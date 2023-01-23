@@ -5,3 +5,6 @@ and their respective values.
 
 instead of uploading the env to github, we set the env variables in `config vars` in settings of app on heroku
 ensuring no key / private info / password leak happens.
+
+New Deployment is here (not on heroku):
+https://zany-dog-tank-top.cyclic.app/

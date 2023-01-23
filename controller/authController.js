@@ -13,7 +13,8 @@ router.use(bodyParser.json());
 // use postman for api testing / making calls
 ///get all users
 // http://localhost:5000/api/auth/users (because the route defined is /api/auth in app.js)
-// https://loginappfkart.herokuapp.com/api/auth/users
+// https://loginappfkart.herokuapp.com/api/auth/users   [old]
+// https://zany-dog-tank-top.cyclic.app/
 router.get('/users', (req, res) => {
     User.find({}, (err, data) => {
         if (err) throw err;
@@ -53,7 +54,7 @@ router.put('/updateAddress/:email/:address', (req, res) => {
 //     "role":"user"
 // }
 // http://localhost:5000/api/auth/register
-// https://loginappfkart.herokuapp.com/api/auth/register
+// https://loginappfkart..com/api/auth/register
 router.post('/register', (req, res) => {
     User.findOne({ email: req.body.email }, (err, user) => {
         if (!user) {        // if user does not exists, only then register
@@ -85,7 +86,8 @@ router.post('/register', (req, res) => {
  * to get user info using the api/auth/userInfo route
  */
 // http://localhost:5000/api/auth/login
-// https://loginappfkart.herokuapp.com/api/auth/login
+// https://loginappfkart.herokuapp.com/api/auth/login   [old]
+// https://zany-dog-tank-top.cyclic.app/
 router.post('/login', (req, res) => {
     User.findOne({ email: req.body.email }, (err, user) => {
         if (err) return res.send({ auth: false, token: 'Error While Login' })
@@ -106,6 +108,7 @@ router.post('/login', (req, res) => {
 //userinfo
 // http://localhost:5000/api/auth/userInfo
 // https://loginappfkart.herokuapp.com/api/auth/userInfo (use postman to pass x-access-token as browser cannot pass it)
+// https://zany-dog-tank-top.cyclic.app/
 router.get('/userInfo', (req, res) => {
     let token = req.headers['x-access-token'];
     if (!token) res.send({ auth: false, token: 'No Token Provided' })
@@ -120,6 +123,7 @@ router.get('/userInfo', (req, res) => {
 
 // delete all registered users (only for Developer)
 // https://loginappfkart.herokuapp.com/api/auth/deleteAll?key=
+// https://zany-dog-tank-top.cyclic.app/
 router.delete('/deleteAll', (req, res) => {
     let key = req.query.key;
     if (key !== process.env.Key)
